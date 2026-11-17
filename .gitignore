@@ -1,0 +1,21 @@
+# Secrets: never commit passwords
+.env
+.streamlit/secrets.toml
+
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# PyCharm and Mac
+.idea/
+.DS_Store
+
+#data
+planning.txt
+cards.csv
+hotels.csv
+# practice
