@@ -15,7 +15,5 @@ __pycache__/
 .DS_Store
 
 #data
-planning.txt
-cards.csv
-hotels.csv
+chatbot_memory.db
 # practice
