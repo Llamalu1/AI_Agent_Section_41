@@ -9,25 +9,44 @@ import gradio as gr
 from langgraph.checkpoint.sqlite import SqliteSaver
 import sqlite3
 
+from langchain_community.tools.tavily_search import TavilySearchResults
 
 load_dotenv()
 
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 def get_date():
-    """ GEt the current day"""
+    """ Return today's date in YYYY-MM-DD format."""
     return datetime.now().strftime('%Y-%m-%d')
 
+search_tool = TavilySearchResults()
 
-llm = ChatOllama(model="qwen3.5:9b")
 
 conn = sqlite3.connect("chatbot_memory.db", check_same_thread=False)
 checkpointer = SqliteSaver(conn)
 system_prompt = """
-You are a helpful agent and if you are asked what's the date today?
- use def get_date().
+You are a helpful, concise assistant.
+Tools:
+-get_date: use it whenever the user asks about toda's date, or when ou need the
+current date to answer( for ecample " this week" or how many days until... ").
+-Search tool: use it for current events, recent news, prices, or anything that 
+might have changed recently. Do not use it for general knowledge, math or a casual
+converstion.
+
+Rules:
+- Before searching for something time-sensitive, call get_date first, so your 
+searchquery includes the right date.
+- Base answers about current events only on the search results, and which sources
+they came from. If the results don't answer the question, say so instead of
+guessing.
+- If you are unsure of lack information,, say so plainly.
+- Remember the earlier messages in this conversation and use them.
+- Keep answers short unless the user asks for details.
+
 """
+llm = ChatOllama(model="qwen3.5:9b")
 
 agent = create_agent(model=llm,
-                     tools=[get_date],
+                     tools=[get_date, search_tool],
                      system_prompt=system_prompt,
                      checkpointer=checkpointer
                      )
