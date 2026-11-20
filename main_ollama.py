@@ -55,7 +55,7 @@ def chat(message, history, thread_id):
     config = {"configurable": {"thread_id": thread_id}}
     response = agent.invoke(
         {"messages": [{"role": "user", "content": message}]},
-    config=config,)
+    config=config)
     last_response = response["messages"][-1].content
     return last_response
 
