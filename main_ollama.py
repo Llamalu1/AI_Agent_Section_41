@@ -14,6 +14,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 load_dotenv()
 
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+
 def get_date():
     """ Return today's date in YYYY-MM-DD format."""
     return datetime.now().strftime('%Y-%m-%d')
